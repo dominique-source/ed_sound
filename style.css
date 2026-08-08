@@ -1,0 +1,409 @@
+/* ===========================================================
+   Ed Sound — design tokens + base layout (Stage 1: foundation)
+   Motion/parallax/shader layers land in later stages; this pass
+   is the static, fully-readable, keyboard/reduced-motion-safe
+   version of every section.
+   =========================================================== */
+
+@layer reset, tokens, base, layout, components, debug;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  img { max-width: 100%; display: block; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; }
+  ul, ol { margin: 0; padding: 0; list-style: none; }
+}
+
+@layer tokens {
+  :root {
+    --bg: #0a0a0a;
+    --fg: #f5f5f0;
+    --muted: #8a8a85;
+    --accent: #ccff1a;
+    --accent-fg: #0a0a0a;
+    --border: rgba(245, 245, 240, 0.14);
+
+    --font-display: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-text: -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+    --gutter: clamp(1.25rem, 4vw, 4rem);
+    --section-py: clamp(4rem, 10vw, 9rem);
+
+    /* Velocity system — updated per-frame by main.js */
+    --vel: 0;
+    --pointer-x: 0;
+    --pointer-y: 0;
+  }
+}
+
+@layer base {
+  html { background: var(--bg); color-scheme: dark; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .skip-link {
+    position: fixed;
+    top: -100%;
+    left: 1rem;
+    z-index: 1000;
+    background: var(--accent);
+    color: var(--accent-fg);
+    padding: 0.75rem 1.25rem;
+    font-weight: 700;
+    transition: top 0.15s ease;
+  }
+  .skip-link:focus { top: 1rem; }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  p { margin: 0; color: var(--muted); }
+
+  section { padding: var(--section-py) var(--gutter); }
+}
+
+@layer layout {
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem var(--gutter);
+    mix-blend-mode: difference;
+  }
+  .wordmark-small {
+    font-family: var(--font-display);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  .site-nav { display: flex; align-items: center; gap: clamp(1rem, 2vw, 2rem); }
+  .site-nav a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .nav-cta {
+    border: 1px solid var(--fg);
+    padding: 0.5rem 1rem;
+  }
+
+  .scroll-meter {
+    position: fixed;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 30vh;
+    background: var(--border);
+    z-index: 90;
+  }
+  .scroll-meter__fill {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 0%;
+    background: var(--accent);
+  }
+}
+
+@layer components {
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1.5rem;
+    overflow: hidden;
+  }
+  .hero__shader {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  .hero__meter { display: flex; }
+  .meter-bars {
+    display: flex;
+    gap: 6px;
+    align-items: flex-end;
+    height: 40px;
+  }
+  .meter-bars .bar {
+    width: 6px;
+    height: 100%;
+    background: var(--border);
+    transform-origin: bottom;
+  }
+  .meter-bars .bar[data-lit="true"] { background: var(--accent); }
+
+  .hero__wordmark {
+    font-size: clamp(3.5rem, 13vw, 11rem);
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+  .hero__wordmark .word { display: block; }
+
+  .hero__tagline {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    color: var(--fg);
+    max-width: 30ch;
+  }
+
+  .hero__player { display: flex; align-items: center; gap: 1rem; }
+  .audio-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 1px solid var(--border);
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+  }
+  .audio-toggle__icon {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 2rem;
+    left: var(--gutter);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---------- Trois salles ---------- */
+  .section-heading {
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    max-width: 20ch;
+    margin-bottom: clamp(2rem, 6vw, 4rem);
+  }
+
+  .rooms__track {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .room-card {
+    border: 1px solid var(--border);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 320px;
+  }
+  .room-card__index { color: var(--muted); font-size: 0.85rem; }
+  .room-card__meter {
+    height: 4px;
+    background: var(--border);
+    position: relative;
+    margin: 0.5rem 0;
+  }
+  .room-card__meter::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: calc(var(--level, 0) * 1%);
+    background: var(--accent);
+  }
+  .room-card[data-level] { --level: 0; }
+  .room-card h3 { font-size: 1.3rem; }
+  .room-card__energy {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+
+  /* ---------- Claim — moment of stillness ---------- */
+  .claim {
+    background: var(--accent);
+    color: var(--accent-fg);
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.25rem;
+  }
+  .claim__line {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(2rem, 7vw, 5rem);
+    color: var(--accent-fg);
+    line-height: 1.05;
+  }
+
+  /* ---------- Duo ---------- */
+  .duo__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+  }
+  .duo__frame {
+    aspect-ratio: 4/5;
+    background: #141414;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 1rem;
+  }
+  .duo__photo:not([src=""]) { width: 100%; height: 100%; object-fit: cover; }
+  .duo__photo[src=""] { display: none; }
+  .duo__frame:has(.duo__photo[src=""])::before {
+    content: attr(data-placeholder-text);
+  }
+  .duo__member figcaption { margin-top: 1rem; display: flex; flex-direction: column; }
+  .duo__name { font-family: var(--font-display); font-weight: 900; font-size: 1.4rem; }
+  .duo__role { color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ---------- Faits ---------- */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    text-align: center;
+  }
+  .fact__number {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .fact__label { color: var(--muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.06em; }
+
+  /* ---------- Preuve ---------- */
+  .proof__tiktok {
+    display: inline-block;
+    margin-top: 1rem;
+    border: 1px solid var(--fg);
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .proof__placeholder-note { margin-top: 2rem; font-style: italic; }
+
+  /* ---------- Process ---------- */
+  .process__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    border-left: 1px solid var(--border);
+    padding-left: 2rem;
+  }
+  .process__number { color: var(--accent); font-family: var(--font-display); font-weight: 900; }
+  .process__step h3 { margin-top: 0.5rem; font-size: 1.3rem; }
+  .process__step p { margin-top: 0.4rem; }
+
+  /* ---------- FAQ ---------- */
+  .faq__list { display: flex; flex-direction: column; gap: 0.75rem; max-width: 60ch; }
+  .faq__item {
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+  }
+  .faq__item summary {
+    cursor: pointer;
+    font-weight: 700;
+    list-style: none;
+  }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__answer { margin-top: 0.75rem; }
+
+  /* ---------- Contact ---------- */
+  .contact__form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    max-width: 720px;
+  }
+  .field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field--full { grid-column: 1 / -1; }
+  .field label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  .field input, .field select, .field textarea {
+    background: #141414;
+    border: 1px solid var(--border);
+    color: var(--fg);
+    padding: 0.75rem;
+    font: inherit;
+  }
+  .submit-button {
+    grid-column: 1 / -1;
+    justify-self: start;
+    background: var(--accent);
+    color: var(--accent-fg);
+    padding: 0.9rem 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .contact__confirmation { grid-column: 1 / -1; color: var(--accent); }
+  .contact__note { margin-top: 1.5rem; font-style: italic; }
+
+  @media (max-width: 640px) {
+    .rooms__track { grid-template-columns: 1fr; }
+    .contact__form { grid-template-columns: 1fr; }
+  }
+
+  .site-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem var(--gutter);
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .site-footer a { text-decoration: none; }
+}
+
+@layer debug {
+  #debug-overlay {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--accent);
+    font: 11px/1.5 ui-monospace, monospace;
+    padding: 0.75rem 1rem;
+    white-space: pre;
+    pointer-events: none;
+    border: 1px solid var(--accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}

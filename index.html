@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ed Sound — DJ duo, Québec</title>
+<meta name="description" content="Ed Sound (Éloi Soucy &amp; Thomas Dubé) — DJ duo de 14 ans. On lit la salle, on met le bon niveau : cafés, mariages, événements sportifs." />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<a class="skip-link" href="#main">Aller au contenu</a>
+
+<header class="site-header" data-depth="near">
+  <a class="wordmark-small" href="#hero">ED SOUND</a>
+  <nav class="site-nav" aria-label="Navigation principale">
+    <a href="#trois-salles">Nos salles</a>
+    <a href="#duo">Le duo</a>
+    <a href="#process">Comment ça marche</a>
+    <a href="#faq">FAQ</a>
+    <a class="nav-cta" href="#contact">Réserver</a>
+  </nav>
+</header>
+
+<!-- Fixed vertical scroll-progress meter -- filled via JS reading scrollY. -->
+<div class="scroll-meter" aria-hidden="true">
+  <div class="scroll-meter__fill" id="scroll-meter-fill"></div>
+</div>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section id="hero" class="hero" aria-label="Introduction">
+    <canvas id="hero-shader" class="hero__shader" aria-hidden="true"></canvas>
+
+    <div class="hero__meter" id="hero-meter" role="img" aria-label="Indicateur de niveau sonore">
+      <!-- 12 bars, populated/lit by JS according to audioLevel or scroll velocity -->
+      <div class="meter-bars" id="hero-meter-bars"></div>
+    </div>
+
+    <h1 class="hero__wordmark" id="hero-wordmark" aria-label="Ed Sound">
+      <span class="word" data-word="ED">ED</span>
+      <span class="word" data-word="SOUND">SOUND</span>
+    </h1>
+
+    <p class="hero__tagline">On lit la salle. On met le bon niveau.</p>
+
+    <div class="hero__player">
+      <button id="audio-toggle" class="audio-toggle" type="button" aria-pressed="false">
+        <span class="audio-toggle__icon" aria-hidden="true"></span>
+        <span class="audio-toggle__label">Écouter un extrait</span>
+      </button>
+      <!--
+        PLACEHOLDER — remplacer par un vrai extrait de mix Ed Sound.
+        Le moteur audio (AnalyserNode) est branché sur cet élément ;
+        déposer le fichier réel dans /audio/extrait.mp3 pour l'activer.
+      -->
+      <audio id="mix-audio" preload="none" src="./audio/extrait-PLACEHOLDER.mp3"></audio>
+    </div>
+
+    <button class="scroll-cue" type="button" data-scroll-to="#trois-salles">
+      <span>Défile</span>
+    </button>
+  </section>
+
+  <!-- ============ TROIS SALLES ============ -->
+  <section id="trois-salles" class="rooms" aria-label="Trois types de salles">
+    <h2 class="section-heading" data-entry="left">Trois salles. Trois niveaux.</h2>
+
+    <div class="rooms__track" id="rooms-track">
+      <article class="room-card" data-level="4" data-max="12">
+        <span class="room-card__index">01</span>
+        <div class="room-card__meter" aria-hidden="true"></div>
+        <h3>Cafés, boulangeries, crèmeries</h3>
+        <p class="room-card__energy">Niveau 4 / 12 — ambiant</p>
+        <p>Volume de conversation, journée, présence discrète qui accompagne sans dominer.</p>
+      </article>
+
+      <article class="room-card" data-level="9" data-max="12">
+        <span class="room-card__index">02</span>
+        <div class="room-card__meter" aria-hidden="true"></div>
+        <h3>Mariages et réceptions</h3>
+        <p class="room-card__energy">Niveau 9 / 12 — célébration</p>
+        <p>L'arc complet d'une soirée : entrée, repas, discours, piste de danse.</p>
+      </article>
+
+      <article class="room-card" data-level="12" data-max="12">
+        <span class="room-card__index">03</span>
+        <div class="room-card__meter" aria-hidden="true"></div>
+        <h3>Événements sportifs</h3>
+        <p class="room-card__energy">Niveau 12 / 12 — maximum</p>
+        <p>Réactif au jeu, arrêts et redémarrages, micro d'annonce.</p>
+      </article>
+    </div>
+    <p class="rooms__progress" aria-hidden="true"></p>
+  </section>
+
+  <!-- ============ CLAIM — moment of total stillness ============ -->
+  <section id="claim" class="claim" aria-label="Notre âge">
+    <p class="claim__line">On a 14 ans.</p>
+    <p class="claim__line">On sait lire une salle.</p>
+  </section>
+
+  <!-- ============ DUO ============ -->
+  <section id="duo" class="duo" aria-label="Le duo">
+    <h2 class="section-heading" data-entry="right">Le duo</h2>
+    <div class="duo__grid">
+      <figure class="duo__member">
+        <div class="duo__frame">
+          <!-- PLACEHOLDER — remplacer par une vraie photo d'Éloi -->
+          <img class="duo__photo" src="" alt="" data-placeholder="Photo d'Éloi Soucy — à fournir" />
+        </div>
+        <figcaption>
+          <span class="duo__name">Éloi Soucy</span>
+          <span class="duo__role">DJ</span>
+        </figcaption>
+      </figure>
+      <figure class="duo__member">
+        <div class="duo__frame">
+          <!-- PLACEHOLDER — remplacer par une vraie photo de Thomas -->
+          <img class="duo__photo" src="" alt="" data-placeholder="Photo de Thomas Dubé — à fournir" />
+        </div>
+        <figcaption>
+          <span class="duo__name">Thomas Dubé</span>
+          <span class="duo__role">DJ</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ FAITS ============ -->
+  <section id="faits" class="facts" aria-label="En bref">
+    <div class="fact">
+      <span class="fact__number" data-count-to="3">0</span>
+      <span class="fact__label">types de salles couvertes</span>
+    </div>
+    <div class="fact">
+      <span class="fact__number" data-count-to="14">0</span>
+      <span class="fact__label">ans, à deux</span>
+    </div>
+    <div class="fact">
+      <span class="fact__number" data-count-to="12">0</span>
+      <span class="fact__label">niveaux sur la console</span>
+    </div>
+  </section>
+
+  <!-- ============ PREUVE / TIKTOK ============ -->
+  <section id="preuve" class="proof" aria-label="Nous suivre">
+    <h2 class="section-heading" data-entry="left">Sur le terrain</h2>
+    <a class="proof__tiktok" href="https://www.tiktok.com/@ed_sound_quebec" target="_blank" rel="noopener noreferrer">
+      Voir sur TikTok — @ed_sound_quebec
+    </a>
+    <div class="proof__testimonials" aria-label="Témoignages">
+      <!-- PLACEHOLDER — aucun témoignage inventé. Remplacer par de vrais avis. -->
+      <p class="proof__placeholder-note">[Témoignages à venir — aucun n'est publié tant qu'il n'est pas réel]</p>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section id="process" class="process" aria-label="Comment ça marche">
+    <h2 class="section-heading" data-entry="right">Comment ça marche</h2>
+    <ol class="process__steps">
+      <li class="process__step" data-step="1">
+        <span class="process__number">01</span>
+        <h3>Tu nous contactes</h3>
+        <p>Type d'événement, date, lieu — le formulaire en bas de page ou TikTok.</p>
+      </li>
+      <li class="process__step" data-step="2">
+        <span class="process__number">02</span>
+        <h3>On lit ta salle</h3>
+        <p>Café, mariage, événement sportif : on ajuste le niveau avant même d'arriver.</p>
+      </li>
+      <li class="process__step" data-step="3">
+        <span class="process__number">03</span>
+        <h3>On mixe le niveau juste</h3>
+        <p>Sur place, on suit l'énergie réelle de la salle du début à la fin.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq" class="faq" aria-label="Questions fréquentes">
+    <h2 class="section-heading">Questions fréquentes</h2>
+    <div class="faq__list">
+      <details class="faq__item">
+        <summary>Vous prenez des demandes spéciales de chansons ?</summary>
+        <div class="faq__answer"><p>Oui. Dis-nous à l'avance ou sur place, on s'ajuste.</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Combien de temps à l'avance faut-il réserver ?</summary>
+        <div class="faq__answer"><p>[PLACEHOLDER — délai de réservation à confirmer]</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Quel est le prix ?</summary>
+        <div class="faq__answer"><p>[PLACEHOLDER — grille de prix à confirmer, ça dépend du type et de la durée de l'événement]</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Vous apportez votre équipement ?</summary>
+        <div class="faq__answer"><p>[PLACEHOLDER — à confirmer selon le type de salle]</p></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="contact" aria-label="Réserver">
+    <h2 class="section-heading">Parle-nous de ton événement</h2>
+    <form class="contact__form" id="contact-form">
+      <div class="field">
+        <label for="name">Ton nom</label>
+        <input id="name" name="name" type="text" autocomplete="name" required />
+      </div>
+      <div class="field">
+        <label for="email">Ton courriel</label>
+        <input id="email" name="email" type="email" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="event-type">Type d'événement</label>
+        <select id="event-type" name="event-type" required>
+          <option value="">— Choisir —</option>
+          <option value="cafe">Café / boulangerie / crèmerie</option>
+          <option value="mariage">Mariage / réception</option>
+          <option value="sport">Événement sportif</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+      <div class="field field--full">
+        <label for="message">Ton événement, en quelques mots</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+      </div>
+      <button class="submit-button" type="submit">Envoyer</button>
+      <p class="contact__confirmation" id="contact-confirmation" hidden>Merci — on te répond vite.</p>
+    </form>
+    <!-- PLACEHOLDER — pas d'envoi réel branché ; formulaire sans backend pour l'instant. -->
+    <p class="contact__note">[PLACEHOLDER — courriel de contact réel à confirmer]</p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <span>© 2026 Ed Sound. Tous droits réservés.</span>
+  <a href="https://www.tiktok.com/@ed_sound_quebec" target="_blank" rel="noopener noreferrer">@ed_sound_quebec</a>
+</footer>
+
+<script type="module" src="./main.js"></script>
+</body>
+</html>
