@@ -141,11 +141,115 @@ function initDebugOverlay() {
   };
 }
 
+/** Nav background/blur transition + signature level-rail fill — both cheap,
+ *  driven straight off the existing scrollY read, no extra listeners. */
+function initScrollUI() {
+  const header = document.getElementById('site-header');
+  const railFill = document.getElementById('level-rail-fill');
+  const docEl = document.documentElement;
+
+  function update() {
+    const y = window.scrollY;
+    if (header) header.classList.toggle('is-scrolled', y > 40);
+    if (railFill) {
+      const max = docEl.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+      railFill.style.height = `${progress * 100}%`;
+    }
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}
+
+/** Level meters (hero mini-meters + room-row meters) fill to their real
+ *  value once, the first time they enter the viewport. Reduced motion:
+ *  jump straight to final value, no transition. */
+function initLevelMeters() {
+  const fills = document.querySelectorAll('[data-level][data-max]');
+  if (!fills.length) return;
+
+  const setFinal = (el) => {
+    const level = Number(el.dataset.level);
+    const max = Number(el.dataset.max);
+    el.style.width = `${(level / max) * 100}%`;
+  };
+
+  if (prefersReducedMotion) {
+    fills.forEach(setFinal);
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        setFinal(entry.target);
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.4 }
+  );
+  fills.forEach((el) => observer.observe(el));
+}
+
+/** Mobile nav toggle. */
+function initNavToggle() {
+  const toggle = document.getElementById('nav-toggle');
+  const nav = document.getElementById('site-nav');
+  if (!toggle || !nav) return;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+  nav.querySelectorAll('a').forEach((link) =>
+    link.addEventListener('click', () => {
+      nav.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    })
+  );
+}
+
+/** Contact form: no backend yet — show an in-place confirmation, never a
+ *  jarring page change, per the motion brief's reveal rules. */
+function initContactForm() {
+  const form = document.getElementById('contact-form');
+  const confirmation = document.getElementById('contact-confirmation');
+  if (!form || !confirmation) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    form.querySelectorAll('input, select, textarea, button').forEach((el) => {
+      el.disabled = true;
+    });
+    confirmation.hidden = false;
+  });
+}
+
+/** Smooth-scroll cue buttons ([data-scroll-to]) route through Lenis when
+ *  active so the jump respects the same easing as the rest of the page. */
+function initScrollCues() {
+  document.querySelectorAll('[data-scroll-to]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = document.querySelector(btn.dataset.scrollTo);
+      if (!target) return;
+      if (lenis) lenis.scrollTo(target);
+      else target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    });
+  });
+}
+
 function init() {
   initDebugOverlay();
   initLenis();
   initPointer();
   initResize();
+  initScrollUI();
+  initLevelMeters();
+  initNavToggle();
+  initContactForm();
+  initScrollCues();
   lastFrameTime = performance.now();
   requestAnimationFrame(tick);
 }

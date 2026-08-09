@@ -3,112 +3,167 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ed Sound — DJ duo, Québec</title>
-<meta name="description" content="Ed Sound (Éloi Soucy &amp; Thomas Dubé) — DJ duo de 14 ans. On lit la salle, on met le bon niveau : cafés, mariages, événements sportifs." />
+<title>Ed Sound — Le bon son. Au bon niveau.</title>
+<meta name="description" content="Ed Sound (Éloi Soucy &amp; Thomas Dubé) — DJ duo, Québec. Le bon son. Au bon niveau. Cafés, mariages, événements sportifs." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
 
 <a class="skip-link" href="#main">Aller au contenu</a>
 
-<header class="site-header" data-depth="near">
-  <a class="wordmark-small" href="#hero">ED SOUND</a>
-  <nav class="site-nav" aria-label="Navigation principale">
-    <a href="#trois-salles">Nos salles</a>
+<header class="site-header" id="site-header">
+  <a class="logo-lockup" href="#hero" aria-label="Ed Sound — accueil">
+    <span class="logo-lockup__mark">ED</span>
+    <span class="logo-lockup__word">SOUND</span>
+  </a>
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+    <span></span><span></span><span></span>
+    <span class="sr-only">Menu</span>
+  </button>
+  <nav class="site-nav" id="site-nav" aria-label="Navigation principale">
+    <a href="#salles">Salles</a>
     <a href="#duo">Le duo</a>
-    <a href="#process">Comment ça marche</a>
+    <a href="#terrain">Sur le terrain</a>
     <a href="#faq">FAQ</a>
     <a class="nav-cta" href="#contact">Réserver</a>
   </nav>
 </header>
 
-<!-- Fixed vertical scroll-progress meter -- filled via JS reading scrollY. -->
-<div class="scroll-meter" aria-hidden="true">
-  <div class="scroll-meter__fill" id="scroll-meter-fill"></div>
+<!-- Signature vertical LEVEL meter — fixed, fills with scroll progress. -->
+<div class="level-rail" id="level-rail" aria-hidden="true">
+  <span class="level-rail__label">LEVEL</span>
+  <span class="level-rail__tick level-rail__tick--top">12</span>
+  <div class="level-rail__track">
+    <div class="level-rail__fill" id="level-rail-fill"></div>
+  </div>
+  <span class="level-rail__tick level-rail__tick--bottom">00</span>
 </div>
 
 <main id="main">
 
   <!-- ============ HERO ============ -->
   <section id="hero" class="hero" aria-label="Introduction">
-    <canvas id="hero-shader" class="hero__shader" aria-hidden="true"></canvas>
-
-    <div class="hero__meter" id="hero-meter" role="img" aria-label="Indicateur de niveau sonore">
-      <!-- 12 bars, populated/lit by JS according to audioLevel or scroll velocity -->
-      <div class="meter-bars" id="hero-meter-bars"></div>
+    <div class="hero__bg" aria-hidden="true">
+      <picture>
+        <source
+          type="image/webp"
+          srcset="public/media/hero-640.webp 640w, public/media/hero-900.webp 900w, public/media/hero-1200.webp 1200w, public/media/hero-1600.webp 1600w, public/media/hero.webp 1672w"
+          sizes="100vw"
+        />
+        <img
+          src="public/media/hero.jpg"
+          alt=""
+          width="1672"
+          height="941"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
+      <div class="hero__scrim"></div>
     </div>
 
-    <h1 class="hero__wordmark" id="hero-wordmark" aria-label="Ed Sound">
-      <span class="word" data-word="ED">ED</span>
-      <span class="word" data-word="SOUND">SOUND</span>
-    </h1>
+    <div class="hero__inner">
+      <p class="hero__kicker">DJ DUO · QUÉBEC</p>
 
-    <p class="hero__tagline">On lit la salle. On met le bon niveau.</p>
+      <h1 class="hero__wordmark">ED SOUND</h1>
 
-    <div class="hero__player">
-      <button id="audio-toggle" class="audio-toggle" type="button" aria-pressed="false">
-        <span class="audio-toggle__icon" aria-hidden="true"></span>
-        <span class="audio-toggle__label">Écouter un extrait</span>
-      </button>
-      <!--
-        PLACEHOLDER — remplacer par un vrai extrait de mix Ed Sound.
-        Le moteur audio (AnalyserNode) est branché sur cet élément ;
-        déposer le fichier réel dans /audio/extrait.mp3 pour l'activer.
-      -->
-      <audio id="mix-audio" preload="none" src="./audio/extrait-PLACEHOLDER.mp3"></audio>
+      <p class="hero__tagline">
+        <span class="tagline-white">Le bon son.</span>
+        <span class="tagline-lime">Au bon niveau.</span>
+      </p>
+
+      <p class="hero__subtitle">Trois salles. Trois niveaux.</p>
+
+      <div class="hero__meters" role="img" aria-label="Trois niveaux : ambiant 4 sur 12, célébration 9 sur 12, maximum 12 sur 12">
+        <div class="mini-meter">
+          <span class="mini-meter__value">04<span class="mini-meter__max">/12</span></span>
+          <span class="mini-meter__label">AMBIANT</span>
+          <div class="mini-meter__bar"><div class="mini-meter__bar-fill" data-level="4" data-max="12"></div></div>
+        </div>
+        <div class="mini-meter">
+          <span class="mini-meter__value">09<span class="mini-meter__max">/12</span></span>
+          <span class="mini-meter__label">CÉLÉBRATION</span>
+          <div class="mini-meter__bar"><div class="mini-meter__bar-fill" data-level="9" data-max="12"></div></div>
+        </div>
+        <div class="mini-meter">
+          <span class="mini-meter__value">12<span class="mini-meter__max">/12</span></span>
+          <span class="mini-meter__label">MAXIMUM</span>
+          <div class="mini-meter__bar"><div class="mini-meter__bar-fill" data-level="12" data-max="12"></div></div>
+        </div>
+      </div>
+
+      <div class="hero__ctas">
+        <a class="cta-primary" href="#contact">Réserver ED SOUND</a>
+        <a class="cta-secondary" href="https://www.tiktok.com/@ed_sound_quebec" target="_blank" rel="noopener noreferrer">Écouter</a>
+      </div>
     </div>
 
-    <button class="scroll-cue" type="button" data-scroll-to="#trois-salles">
+    <button class="scroll-cue" type="button" data-scroll-to="#salles">
       <span>Défile</span>
     </button>
   </section>
 
-  <!-- ============ TROIS SALLES ============ -->
-  <section id="trois-salles" class="rooms" aria-label="Trois types de salles">
-    <h2 class="section-heading" data-entry="left">Trois salles. Trois niveaux.</h2>
+  <!-- ============ SALLES — editorial LEVEL/12 system ============ -->
+  <section id="salles" class="rooms" aria-label="Trois salles, trois niveaux">
+    <div class="section-intro">
+      <h2 class="section-heading">Trois salles.<br />Trois niveaux.</h2>
+    </div>
 
-    <div class="rooms__track" id="rooms-track">
-      <article class="room-card" data-level="4" data-max="12">
-        <span class="room-card__index">01</span>
-        <div class="room-card__meter" aria-hidden="true"></div>
-        <h3>Cafés, boulangeries, crèmeries</h3>
-        <p class="room-card__energy">Niveau 4 / 12 — ambiant</p>
-        <p>Volume de conversation, journée, présence discrète qui accompagne sans dominer.</p>
+    <div class="rooms__list">
+      <article class="room-row">
+        <span class="room-row__number">04<span class="room-row__max">/12</span></span>
+        <div class="room-row__body">
+          <span class="room-row__category">AMBIANT</span>
+          <h3 class="room-row__type">Cafés, boulangeries, crèmeries</h3>
+          <p class="room-row__desc">Volume de conversation, journée, présence discrète qui accompagne sans dominer.</p>
+          <div class="level-meter"><div class="level-meter__fill" data-level="4" data-max="12"></div></div>
+        </div>
       </article>
 
-      <article class="room-card" data-level="9" data-max="12">
-        <span class="room-card__index">02</span>
-        <div class="room-card__meter" aria-hidden="true"></div>
-        <h3>Mariages et réceptions</h3>
-        <p class="room-card__energy">Niveau 9 / 12 — célébration</p>
-        <p>L'arc complet d'une soirée : entrée, repas, discours, piste de danse.</p>
+      <article class="room-row">
+        <span class="room-row__number">09<span class="room-row__max">/12</span></span>
+        <div class="room-row__body">
+          <span class="room-row__category">CÉLÉBRATION</span>
+          <h3 class="room-row__type">Mariages et réceptions</h3>
+          <p class="room-row__desc">L'arc complet d'une soirée : entrée, repas, discours, piste de danse.</p>
+          <div class="level-meter"><div class="level-meter__fill" data-level="9" data-max="12"></div></div>
+        </div>
       </article>
 
-      <article class="room-card" data-level="12" data-max="12">
-        <span class="room-card__index">03</span>
-        <div class="room-card__meter" aria-hidden="true"></div>
-        <h3>Événements sportifs</h3>
-        <p class="room-card__energy">Niveau 12 / 12 — maximum</p>
-        <p>Réactif au jeu, arrêts et redémarrages, micro d'annonce.</p>
+      <article class="room-row">
+        <span class="room-row__number">12<span class="room-row__max">/12</span></span>
+        <div class="room-row__body">
+          <span class="room-row__category">MAXIMUM</span>
+          <h3 class="room-row__type">Événements sportifs</h3>
+          <p class="room-row__desc">Réactif au jeu, arrêts et redémarrages, micro d'annonce.</p>
+          <div class="level-meter"><div class="level-meter__fill" data-level="12" data-max="12"></div></div>
+        </div>
       </article>
     </div>
-    <p class="rooms__progress" aria-hidden="true"></p>
   </section>
 
-  <!-- ============ CLAIM — moment of total stillness ============ -->
-  <section id="claim" class="claim" aria-label="Notre âge">
-    <p class="claim__line">On a 14 ans.</p>
-    <p class="claim__line">On sait lire une salle.</p>
+  <!-- ============ RECURRING BRAND MOMENT — full-bleed stillness ============ -->
+  <section class="statement" aria-hidden="false">
+    <p class="statement__line">Le bon son.</p>
+    <p class="statement__line statement__line--dark">Au bon niveau.</p>
   </section>
 
   <!-- ============ DUO ============ -->
   <section id="duo" class="duo" aria-label="Le duo">
-    <h2 class="section-heading" data-entry="right">Le duo</h2>
+    <div class="section-intro">
+      <h2 class="section-heading">Deux DJs.<br />Un même niveau.</h2>
+    </div>
     <div class="duo__grid">
       <figure class="duo__member">
         <div class="duo__frame">
-          <!-- PLACEHOLDER — remplacer par une vraie photo d'Éloi -->
-          <img class="duo__photo" src="" alt="" data-placeholder="Photo d'Éloi Soucy — à fournir" />
+          <picture>
+            <source type="image/webp" srcset="public/media/duo/eloi-400.webp 400w, public/media/duo/eloi-600.webp 600w, public/media/duo/eloi-900.webp 900w, public/media/duo/eloi.webp 1122w" sizes="(min-width: 860px) 40vw, 90vw" />
+            <img class="duo__photo" src="public/media/duo/eloi.jpg" alt="Éloi Soucy, derrière une console DJ" loading="lazy" decoding="async" width="1122" height="1402" />
+          </picture>
         </div>
         <figcaption>
           <span class="duo__name">Éloi Soucy</span>
@@ -116,9 +171,8 @@
         </figcaption>
       </figure>
       <figure class="duo__member">
-        <div class="duo__frame">
-          <!-- PLACEHOLDER — remplacer par une vraie photo de Thomas -->
-          <img class="duo__photo" src="" alt="" data-placeholder="Photo de Thomas Dubé — à fournir" />
+        <div class="duo__frame" data-placeholder-text="Photo de Thomas — à fournir">
+          <img class="duo__photo" src="" alt="" />
         </div>
         <figcaption>
           <span class="duo__name">Thomas Dubé</span>
@@ -126,91 +180,72 @@
         </figcaption>
       </figure>
     </div>
+    <p class="duo__caption">Duo québécois. 14 ans, un même niveau.</p>
   </section>
 
-  <!-- ============ FAITS ============ -->
-  <section id="faits" class="facts" aria-label="En bref">
-    <div class="fact">
-      <span class="fact__number" data-count-to="3">0</span>
-      <span class="fact__label">types de salles couvertes</span>
+  <!-- ============ SUR LE TERRAIN ============ -->
+  <section id="terrain" class="proof" aria-label="Sur le terrain">
+    <div class="section-intro">
+      <h2 class="section-heading">Sur le terrain.</h2>
+      <p class="section-lead">Pas une playlist. Une présence.</p>
     </div>
-    <div class="fact">
-      <span class="fact__number" data-count-to="14">0</span>
-      <span class="fact__label">ans, à deux</span>
-    </div>
-    <div class="fact">
-      <span class="fact__number" data-count-to="12">0</span>
-      <span class="fact__label">niveaux sur la console</span>
-    </div>
-  </section>
 
-  <!-- ============ PREUVE / TIKTOK ============ -->
-  <section id="preuve" class="proof" aria-label="Nous suivre">
-    <h2 class="section-heading" data-entry="left">Sur le terrain</h2>
-    <a class="proof__tiktok" href="https://www.tiktok.com/@ed_sound_quebec" target="_blank" rel="noopener noreferrer">
-      Voir sur TikTok — @ed_sound_quebec
+    <a class="proof__frame" href="https://www.tiktok.com/@ed_sound_quebec" target="_blank" rel="noopener noreferrer">
+      <span class="proof__frame-label">LIVE&nbsp;/&nbsp;12</span>
+      <span class="proof__frame-cta">Voir sur TikTok — @ed_sound_quebec</span>
     </a>
-    <div class="proof__testimonials" aria-label="Témoignages">
-      <!-- PLACEHOLDER — aucun témoignage inventé. Remplacer par de vrais avis. -->
-      <p class="proof__placeholder-note">[Témoignages à venir — aucun n'est publié tant qu'il n'est pas réel]</p>
-    </div>
   </section>
 
-  <!-- ============ PROCESS ============ -->
+  <!-- ============ COMMENT ÇA MARCHE ============ -->
   <section id="process" class="process" aria-label="Comment ça marche">
-    <h2 class="section-heading" data-entry="right">Comment ça marche</h2>
-    <ol class="process__steps">
-      <li class="process__step" data-step="1">
+    <div class="section-intro">
+      <h2 class="section-heading">Comment ça marche.</h2>
+    </div>
+    <ol class="process__list">
+      <li class="process__row">
         <span class="process__number">01</span>
         <h3>Tu nous contactes</h3>
-        <p>Type d'événement, date, lieu — le formulaire en bas de page ou TikTok.</p>
       </li>
-      <li class="process__step" data-step="2">
+      <li class="process__row">
         <span class="process__number">02</span>
-        <h3>On lit ta salle</h3>
-        <p>Café, mariage, événement sportif : on ajuste le niveau avant même d'arriver.</p>
+        <h3>On prépare le bon niveau</h3>
       </li>
-      <li class="process__step" data-step="3">
+      <li class="process__row">
         <span class="process__number">03</span>
-        <h3>On mixe le niveau juste</h3>
-        <p>Sur place, on suit l'énergie réelle de la salle du début à la fin.</p>
+        <h3>On joue avec l'énergie du moment</h3>
       </li>
     </ol>
   </section>
 
   <!-- ============ FAQ ============ -->
   <section id="faq" class="faq" aria-label="Questions fréquentes">
-    <h2 class="section-heading">Questions fréquentes</h2>
+    <div class="section-intro">
+      <h2 class="section-heading">Questions fréquentes.</h2>
+    </div>
     <div class="faq__list">
       <details class="faq__item">
-        <summary>Vous prenez des demandes spéciales de chansons ?</summary>
+        <summary>Vous prenez des demandes spéciales de chansons ?<span class="faq__icon" aria-hidden="true"></span></summary>
         <div class="faq__answer"><p>Oui. Dis-nous à l'avance ou sur place, on s'ajuste.</p></div>
       </details>
       <details class="faq__item">
-        <summary>Combien de temps à l'avance faut-il réserver ?</summary>
-        <div class="faq__answer"><p>[PLACEHOLDER — délai de réservation à confirmer]</p></div>
-      </details>
-      <details class="faq__item">
-        <summary>Quel est le prix ?</summary>
-        <div class="faq__answer"><p>[PLACEHOLDER — grille de prix à confirmer, ça dépend du type et de la durée de l'événement]</p></div>
-      </details>
-      <details class="faq__item">
-        <summary>Vous apportez votre équipement ?</summary>
-        <div class="faq__answer"><p>[PLACEHOLDER — à confirmer selon le type de salle]</p></div>
+        <summary>Comment suivre votre travail avant de réserver ?<span class="faq__icon" aria-hidden="true"></span></summary>
+        <div class="faq__answer"><p>Tous nos sets sont sur TikTok, <a href="https://www.tiktok.com/@ed_sound_quebec" target="_blank" rel="noopener noreferrer">@ed_sound_quebec</a>.</p></div>
       </details>
     </div>
   </section>
 
-  <!-- ============ CONTACT ============ -->
-  <section id="contact" class="contact" aria-label="Réserver">
-    <h2 class="section-heading">Parle-nous de ton événement</h2>
-    <form class="contact__form" id="contact-form">
+  <!-- ============ RÉSERVER ============ -->
+  <section id="contact" class="booking" aria-label="Réserver">
+    <div class="section-intro">
+      <h2 class="section-heading">Ton événement.<br /><span class="tagline-lime">Ton niveau.</span></h2>
+    </div>
+    <form class="booking__form" id="contact-form">
       <div class="field">
-        <label for="name">Ton nom</label>
+        <label for="name">Nom</label>
         <input id="name" name="name" type="text" autocomplete="name" required />
       </div>
       <div class="field">
-        <label for="email">Ton courriel</label>
+        <label for="email">Courriel</label>
         <input id="email" name="email" type="email" autocomplete="email" required />
       </div>
       <div class="field">
@@ -224,21 +259,26 @@
         </select>
       </div>
       <div class="field field--full">
-        <label for="message">Ton événement, en quelques mots</label>
+        <label for="message">Message</label>
         <textarea id="message" name="message" rows="4" required></textarea>
       </div>
-      <button class="submit-button" type="submit">Envoyer</button>
-      <p class="contact__confirmation" id="contact-confirmation" hidden>Merci — on te répond vite.</p>
+      <button class="submit-button" type="submit">Réserver ED SOUND</button>
+      <p class="booking__confirmation" id="contact-confirmation" hidden>Merci — on te répond vite.</p>
     </form>
-    <!-- PLACEHOLDER — pas d'envoi réel branché ; formulaire sans backend pour l'instant. -->
-    <p class="contact__note">[PLACEHOLDER — courriel de contact réel à confirmer]</p>
   </section>
 
 </main>
 
 <footer class="site-footer">
-  <span>© 2026 Ed Sound. Tous droits réservés.</span>
-  <a href="https://www.tiktok.com/@ed_sound_quebec" target="_blank" rel="noopener noreferrer">@ed_sound_quebec</a>
+  <div class="site-footer__lockup">
+    <span class="site-footer__name">ED SOUND</span>
+    <span class="site-footer__tagline">SON. NIVEAU. ÉNERGIE.</span>
+  </div>
+  <div class="site-footer__links">
+    <a href="https://www.tiktok.com/@ed_sound_quebec" target="_blank" rel="noopener noreferrer">TikTok</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <span class="site-footer__copy">© 2026 Ed Sound. Tous droits réservés.</span>
 </footer>
 
 <script type="module" src="./main.js"></script>
