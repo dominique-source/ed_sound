@@ -315,9 +315,11 @@
      already-lerp-smoothed velocity, no extra transition (avoids double-
      smoothing / lag stacking, same reasoning as the context-row skew). */
   .energy__flash {
-    position: absolute; inset: 0; z-index: 1;
-    background: linear-gradient(120deg, rgba(199,240,0,.65) 0%, rgba(51,214,255,.55) 50%, rgba(255,68,112,.6) 100%);
-    opacity: var(--vel-abs, 0);
+    position: absolute; z-index: 1; left: 50%; top: 77%; width: 55%; aspect-ratio: 3 / 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(199,240,0,.6) 0%, rgba(199,240,0,.25) 45%, transparent 75%);
+    opacity: calc(var(--vel-abs, 0) * 0.5);
     mix-blend-mode: screen;
   }
 
@@ -335,9 +337,8 @@
   .energy__shine-spin {
     position: absolute; inset: -60%;
     background: conic-gradient(from 0deg,
-      transparent 0deg, rgba(255,244,214,.85) 18deg, transparent 45deg,
-      transparent 160deg, rgba(199,240,0,.7) 185deg, transparent 215deg,
-      transparent 340deg, rgba(255,244,214,.5) 355deg, transparent 360deg);
+      transparent 0deg, rgba(199,240,0,.75) 20deg, transparent 55deg,
+      transparent 305deg, rgba(199,240,0,.4) 340deg, transparent 360deg);
     transform: rotate(var(--turntable-rot, 0deg));
     mix-blend-mode: screen;
   }
