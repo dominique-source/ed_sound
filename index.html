@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ed Sound — Le bon son. Au bon niveau.</title>
 <meta name="description" content="Ed Sound (Éloi Soucy &amp; Thomas Dubé) — DJ duo, Québec. Le bon son. Au bon niveau. Cafés, mariages, événements sportifs." />
+<link rel="icon" href="media/brand/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="media/brand/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="media/brand/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="media/brand/apple-touch-icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet" />
@@ -16,8 +20,10 @@
 
 <header class="site-header" id="site-header">
   <a class="logo-lockup" href="#hero" aria-label="Ed Sound — accueil">
-    <span class="logo-lockup__mark">ED</span>
-    <span class="logo-lockup__word">SOUND</span>
+    <picture>
+      <source type="image/webp" srcset="media/brand/logo-160.webp 160w, media/brand/logo-240.webp 240w, media/brand/logo.webp 1536w" sizes="120px" />
+      <img class="logo-lockup__img" src="media/brand/logo.jpg" alt="Ed Sound" width="1536" height="1024" decoding="async" />
+    </picture>
   </a>
   <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
     <span></span><span></span><span></span>
