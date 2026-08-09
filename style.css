@@ -81,6 +81,17 @@
 
   .tagline-white { color: var(--fg); }
   .tagline-lime { color: var(--accent); }
+
+  /* ---------- Scroll reveal — generic, fires once per element ---------- */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
+  }
+  [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] { opacity: 1; transform: none; transition: none; }
+  }
 }
 
 @layer layout {
@@ -215,12 +226,28 @@
     padding: clamp(2rem, 5vw, 3.5rem) 0;
     border-top: 1px solid var(--border);
     align-items: start;
+    position: relative;
+    /* merged with [data-reveal]'s opacity/transform — this rule's layer wins, so it must carry both */
+    transition: background-color 0.3s ease, opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
   }
   .contexts__list .context-row:last-child { border-bottom: 1px solid var(--border); }
+  .context-row::before {
+    content: ""; position: absolute; left: -1.25rem; top: 0; bottom: 0; width: 2px;
+    background: var(--accent); transform: scaleY(0); transform-origin: top;
+    transition: transform 0.4s cubic-bezier(.16,1,.3,1);
+  }
+  @media (hover: hover) {
+    .context-row:hover { background-color: rgba(199, 240, 0, 0.035); }
+    .context-row:hover::before { transform: scaleY(1); }
+    .context-row:hover .context-row__index { color: var(--accent); }
+    .context-row:hover .context-row__body { transform: translateX(8px); }
+  }
   .context-row__index {
     font-family: var(--font-display); font-size: clamp(1rem, 1.8vw, 1.3rem);
     color: var(--muted); padding-top: 0.5em;
+    transition: color 0.3s ease;
   }
+  .context-row__body { transition: transform 0.4s cubic-bezier(.16,1,.3,1); }
   .context-row__headline {
     font-size: clamp(2.5rem, 7vw, 5rem); line-height: 0.92;
   }
@@ -232,6 +259,8 @@
     text-transform: uppercase; color: var(--accent);
   }
   .context-row__desc { margin-top: 0.75rem; max-width: 52ch; }
+  .contexts__list .context-row:nth-child(2) { transition-delay: 0.1s; }
+  .contexts__list .context-row:nth-child(3) { transition-delay: 0.2s; }
 
   /* ---------- Énergie /12 — dynamique ---------- */
   .energy-sequence {
@@ -322,14 +351,33 @@
   .process__row {
     display: flex; align-items: flex-start; gap: clamp(1.5rem, 4vw, 3rem);
     padding: clamp(1.5rem, 3vw, 2.25rem) 0; border-top: 1px solid var(--border);
+    position: relative;
+    /* merged with [data-reveal]'s opacity/transform — this rule's layer wins, so it must carry both */
+    transition: background-color 0.3s ease, opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
   }
   .process__list .process__row:last-child { border-bottom: 1px solid var(--border); }
+  .process__row::before {
+    content: ""; position: absolute; left: -1.25rem; top: 0; bottom: 0; width: 2px;
+    background: var(--accent); transform: scaleY(0); transform-origin: top;
+    transition: transform 0.4s cubic-bezier(.16,1,.3,1);
+  }
+  @media (hover: hover) {
+    .process__row:hover { background-color: rgba(199, 240, 0, 0.035); }
+    .process__row:hover::before { transform: scaleY(1); }
+    .process__row:hover .process__number { transform: scale(1.15); }
+    .process__row:hover > div { transform: translateX(8px); }
+  }
   .process__number {
     font-family: var(--font-display); color: var(--accent);
     font-size: clamp(1.5rem, 3vw, 2.25rem); min-width: 3ch;
+    display: inline-block; transform-origin: left center;
+    transition: transform 0.3s cubic-bezier(.16,1,.3,1);
   }
+  .process__row > div { transition: transform 0.4s cubic-bezier(.16,1,.3,1); }
   .process__row h3 { font-size: clamp(1.1rem, 2.4vw, 1.6rem); }
   .process__desc { margin-top: 0.5rem; max-width: 46ch; }
+  .process__list .process__row:nth-child(2) { transition-delay: 0.1s; }
+  .process__list .process__row:nth-child(3) { transition-delay: 0.2s; }
 
   /* ---------- Booking ---------- */
   .booking__echo {

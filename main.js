@@ -192,6 +192,31 @@ function initLevelMeters() {
   fills.forEach((el) => observer.observe(el));
 }
 
+/** Generic scroll-reveal: [data-reveal] elements fade/slide up once, the
+ *  first time they cross the threshold. CSS already forces them visible
+ *  under prefers-reduced-motion, so this is a no-op (harmless) in that case. */
+function initRevealAnimations() {
+  const targets = document.querySelectorAll('[data-reveal]');
+  if (!targets.length) return;
+
+  if (prefersReducedMotion) {
+    targets.forEach((el) => el.classList.add('is-visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.2 }
+  );
+  targets.forEach((el) => observer.observe(el));
+}
+
 /** Mobile nav toggle. */
 function initNavToggle() {
   const toggle = document.getElementById('nav-toggle');
@@ -264,6 +289,7 @@ function init() {
   initResize();
   initScrollUI();
   initLevelMeters();
+  initRevealAnimations();
   initNavToggle();
   initContactForm();
   initScrollCues();
