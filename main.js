@@ -140,56 +140,18 @@ function initDebugOverlay() {
   };
 }
 
-/** Nav background/blur transition + signature level-rail fill — both cheap,
- *  driven straight off the existing scrollY read, no extra listeners. */
+/** Nav background/blur transition — driven straight off scrollY, no extra
+ *  listeners beyond the one below. */
 function initScrollUI() {
   const header = document.getElementById('site-header');
-  const railFill = document.getElementById('level-rail-fill');
-  const docEl = document.documentElement;
 
   function update() {
     const y = window.scrollY;
     if (header) header.classList.toggle('is-scrolled', y > 40);
-    if (railFill) {
-      const max = docEl.scrollHeight - window.innerHeight;
-      const progress = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
-      railFill.style.height = `${progress * 100}%`;
-    }
   }
 
   window.addEventListener('scroll', update, { passive: true });
   update();
-}
-
-/** Level meters (the /12 energy sequence) fill to their real value once,
- *  the first time they enter the viewport. Reduced motion: jump straight
- *  to final value, no transition. */
-function initLevelMeters() {
-  const fills = document.querySelectorAll('[data-level][data-max]');
-  if (!fills.length) return;
-
-  const setFinal = (el) => {
-    const level = Number(el.dataset.level);
-    const max = Number(el.dataset.max);
-    el.style.width = `${(level / max) * 100}%`;
-  };
-
-  if (prefersReducedMotion) {
-    fills.forEach(setFinal);
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        setFinal(entry.target);
-        observer.unobserve(entry.target);
-      });
-    },
-    { threshold: 0.4 }
-  );
-  fills.forEach((el) => observer.observe(el));
 }
 
 /** Generic scroll-reveal: [data-reveal] elements fade/slide up once, the
@@ -351,7 +313,6 @@ function init() {
   initPointer();
   initResize();
   initScrollUI();
-  initLevelMeters();
   initRevealAnimations();
   initNavToggle();
   initContactForm();
