@@ -315,10 +315,10 @@
      already-lerp-smoothed velocity, no extra transition (avoids double-
      smoothing / lag stacking, same reasoning as the context-row skew). */
   .energy__flash {
-    position: absolute; inset: 0;
-    background: linear-gradient(120deg, rgba(199,240,0,.55) 0%, rgba(51,214,255,.4) 50%, rgba(255,68,112,.45) 100%);
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(120deg, rgba(199,240,0,.65) 0%, rgba(51,214,255,.55) 50%, rgba(255,68,112,.6) 100%);
     opacity: var(--vel-abs, 0);
-    mix-blend-mode: color-dodge;
+    mix-blend-mode: screen;
   }
 
   /* Turntable shine — a rotating conic-gradient glint over the disc's
@@ -327,7 +327,7 @@
      (the photo's dramatic low camera angle makes the disc a heavily
      perspective-skewed ellipse, too distorted to crop/rotate cleanly). */
   .energy__shine {
-    position: absolute; left: 50%; top: 77%; width: 58%; aspect-ratio: 3 / 1;
+    position: absolute; z-index: 1; left: 50%; top: 77%; width: 58%; aspect-ratio: 3 / 1;
     transform: translate(-50%, -50%);
     border-radius: 50%; overflow: hidden;
     filter: blur(3px);
@@ -335,9 +335,9 @@
   .energy__shine-spin {
     position: absolute; inset: -60%;
     background: conic-gradient(from 0deg,
-      transparent 0deg, rgba(255,244,214,.55) 18deg, transparent 45deg,
-      transparent 160deg, rgba(199,240,0,.4) 185deg, transparent 215deg,
-      transparent 340deg, rgba(255,244,214,.3) 355deg, transparent 360deg);
+      transparent 0deg, rgba(255,244,214,.85) 18deg, transparent 45deg,
+      transparent 160deg, rgba(199,240,0,.7) 185deg, transparent 215deg,
+      transparent 340deg, rgba(255,244,214,.5) 355deg, transparent 360deg);
     transform: rotate(var(--turntable-rot, 0deg));
     mix-blend-mode: screen;
   }
