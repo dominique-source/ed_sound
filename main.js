@@ -282,6 +282,33 @@ function initScrollCues() {
   });
 }
 
+/** A lime ripple flashes out from the exact click/tap point on each context
+ *  row (pop-up/célébration/live), sized to cover the row's diagonal so it
+ *  always reaches every corner. Purely decorative feedback — the rows
+ *  aren't links — so it's skipped entirely under reduced motion rather
+ *  than just visually suppressed. */
+function initContextRipple() {
+  if (prefersReducedMotion) return;
+
+  document.querySelectorAll('.context-row').forEach((row) => {
+    row.addEventListener('pointerdown', (e) => {
+      const rect = row.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const size = Math.hypot(rect.width, rect.height) * 1.2;
+
+      const ripple = document.createElement('span');
+      ripple.className = 'context-row__ripple';
+      ripple.style.width = `${size}px`;
+      ripple.style.height = `${size}px`;
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      row.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+    });
+  });
+}
+
 /** Magnetic pull on CTAs — desktop pointer only, real hover devices only.
  *  Displacement is small (max 8px) and always includes a slight upward
  *  bias so it still reads as a "lift" when the pointer sits dead-center. */
@@ -330,6 +357,7 @@ function init() {
   initContactForm();
   initScrollCues();
   initMagneticButtons();
+  initContextRipple();
   initImageFadeIn();
   lastFrameTime = performance.now();
   requestAnimationFrame(tick);
