@@ -44,10 +44,14 @@
 
 @layer base {
   html {
-    background: var(--bg); color-scheme: dark; scroll-behavior: smooth;
+    background: var(--bg); color-scheme: dark;
+    /* scroll-behavior stays "auto" (the default) on purpose: Lenis owns
+       smoothing via its own rAF-driven interpolation (see main.js
+       scrollToTarget). CSS scroll-behavior:smooth would run its own
+       competing animation on the same scrollTop, and the two fighting
+       every frame is what caused the choppy/stuttery scroll. */
     scrollbar-color: var(--accent) var(--bg-raised); scrollbar-width: thin;
   }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: var(--bg-raised); }
