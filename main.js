@@ -41,6 +41,12 @@ let lenis = null;
 let lastScrollY = 0;
 let lastFrameTime = performance.now();
 
+// Turntable shine (energy section) — accumulated rotation, degrees per
+// unit of scroll velocity per second. Purely decorative; skipped entirely
+// under reduced motion (CSS hides the layer, so the writes are harmless).
+let turntableRotation = 0;
+const TURNTABLE_DEG_PER_SEC = 220;
+
 function initLenis() {
   if (prefersReducedMotion) return;
   lenis = new Lenis({
@@ -97,7 +103,12 @@ function tick(time) {
   state.pointerX += (state.targetPointerX - state.pointerX) * POINTER_LERP;
   state.pointerY += (state.targetPointerY - state.pointerY) * POINTER_LERP;
 
+  const velAbs = Math.min(1, Math.abs(state.scrollVelocity) * 2.2);
+  turntableRotation += state.scrollVelocity * TURNTABLE_DEG_PER_SEC * dt;
+
   document.documentElement.style.setProperty('--vel', state.scrollVelocity.toFixed(4));
+  document.documentElement.style.setProperty('--vel-abs', velAbs.toFixed(4));
+  document.documentElement.style.setProperty('--turntable-rot', `${turntableRotation.toFixed(2)}deg`);
   document.documentElement.style.setProperty('--pointer-x', state.pointerX.toFixed(4));
   document.documentElement.style.setProperty('--pointer-y', state.pointerY.toFixed(4));
 
