@@ -282,6 +282,42 @@ function initScrollCues() {
   });
 }
 
+/** Magnetic pull on CTAs — desktop pointer only, real hover devices only.
+ *  Displacement is small (max 8px) and always includes a slight upward
+ *  bias so it still reads as a "lift" when the pointer sits dead-center. */
+function initMagneticButtons() {
+  if (prefersReducedMotion) return;
+  if (!window.matchMedia('(hover: hover)').matches) return;
+
+  const STRENGTH = 0.35;
+  const MAX = 8;
+  const targets = document.querySelectorAll('.cta-primary, .cta-secondary, .submit-button, .proof__cta');
+
+  targets.forEach((el) => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = Math.max(-MAX, Math.min(MAX, (e.clientX - rect.left - rect.width / 2) * STRENGTH));
+      const y = Math.max(-MAX, Math.min(MAX, (e.clientY - rect.top - rect.height / 2) * STRENGTH));
+      el.style.transform = `translate(${x.toFixed(1)}px, ${(y - 2).toFixed(1)}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  });
+}
+
+/** Lazy images fade in once decoded instead of popping in fully formed.
+ *  Skips eager/above-the-fold images (hero) — those should never be hidden
+ *  while loading. */
+function initImageFadeIn() {
+  const images = document.querySelectorAll('img[loading="lazy"]');
+  images.forEach((img) => {
+    const reveal = () => img.classList.add('is-loaded');
+    if (img.complete) reveal();
+    else img.addEventListener('load', reveal, { once: true });
+  });
+}
+
 function init() {
   initDebugOverlay();
   initLenis();
@@ -293,6 +329,8 @@ function init() {
   initNavToggle();
   initContactForm();
   initScrollCues();
+  initMagneticButtons();
+  initImageFadeIn();
   lastFrameTime = performance.now();
   requestAnimationFrame(tick);
 }

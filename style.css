@@ -43,8 +43,16 @@
 }
 
 @layer base {
-  html { background: var(--bg); color-scheme: dark; scroll-behavior: smooth; }
+  html {
+    background: var(--bg); color-scheme: dark; scroll-behavior: smooth;
+    scrollbar-color: var(--accent) var(--bg-raised); scrollbar-width: thin;
+  }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-raised); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border: 2px solid var(--bg-raised); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #dbff4d; }
 
   body {
     background: var(--bg);
@@ -91,6 +99,13 @@
   [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ---------- Lazy image fade-in — smooths the pop-in on slow connections ---------- */
+  img[loading="lazy"] { opacity: 0; transition: opacity 0.6s ease; }
+  img[loading="lazy"].is-loaded { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    img[loading="lazy"] { opacity: 1; transition: none; }
   }
 }
 
@@ -267,6 +282,16 @@
   .contexts__list .context-row:nth-child(3) { transition-delay: 0.2s; }
 
   /* ---------- Énergie /12 — dynamique ---------- */
+  .energy { position: relative; overflow: hidden; }
+  .energy__ghost {
+    position: absolute; top: 50%; right: clamp(-2rem, 2vw, 2rem);
+    transform: translateY(-50%);
+    font-family: var(--font-display); font-weight: 900;
+    font-size: clamp(10rem, 30vw, 26rem); line-height: 1;
+    color: var(--fg); opacity: 0.035; pointer-events: none;
+    user-select: none; z-index: 0;
+  }
+  .energy > * { position: relative; z-index: 1; }
   .energy-sequence {
     display: flex; align-items: center; gap: clamp(1rem, 3vw, 2rem); flex-wrap: wrap;
   }
@@ -415,10 +440,19 @@
 
   /* ---------- Footer ---------- */
   .site-footer {
+    position: relative; overflow: hidden;
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
     gap: 1.5rem; padding: clamp(2.5rem, 5vw, 4rem) var(--gutter) clamp(2.5rem, 5vw, 4rem) calc(var(--gutter) + var(--rail-w));
     border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--muted);
   }
+  .site-footer__ghost {
+    position: absolute; left: 50%; bottom: -0.28em; transform: translateX(-50%);
+    font-family: var(--font-display); font-weight: 900; white-space: nowrap;
+    font-size: clamp(4rem, 16vw, 11rem); line-height: 1;
+    color: var(--fg); opacity: 0.035; pointer-events: none;
+    user-select: none; z-index: 0;
+  }
+  .site-footer > * { position: relative; z-index: 1; }
   .site-footer__lockup { display: flex; flex-direction: column; }
   .site-footer__name { font-family: var(--font-display); font-size: 1rem; color: var(--fg); }
   .site-footer__tagline { font-size: 0.65rem; letter-spacing: 0.18em; margin-top: 0.35rem; }
