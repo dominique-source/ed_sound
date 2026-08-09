@@ -351,38 +351,54 @@
   }
   .proof__cta:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* ---------- Process ---------- */
-  .process__list { display: flex; flex-direction: column; }
+  /* ---------- Process — badge timeline ---------- */
+  .process { --process-badge: clamp(3rem, 6vw, 4rem); }
+  .process__list { display: flex; flex-direction: column; position: relative; }
+  .process__list::before,
+  .process__list::after {
+    content: ""; position: absolute;
+    left: calc(var(--process-badge) / 2 - 1px); width: 2px;
+  }
+  .process__list::before { top: 0; bottom: 0; background: var(--border); z-index: 0; }
+  .process__list::after {
+    top: 0; height: 100%; background: var(--accent); z-index: 1;
+    transform: scaleY(0); transform-origin: top;
+    transition: transform 1.1s cubic-bezier(.16,1,.3,1);
+  }
+  .process__list.is-visible::after { transform: scaleY(1); }
   .process__row {
-    display: flex; align-items: flex-start; gap: clamp(1.5rem, 4vw, 3rem);
-    padding: clamp(1.5rem, 3vw, 2.25rem) 0; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(1.25rem, 3vw, 2rem) 0;
     position: relative;
     /* merged with [data-reveal]'s opacity/transform — this rule's layer wins, so it must carry both */
-    transition: background-color 0.3s ease, opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
-  }
-  .process__list .process__row:last-child { border-bottom: 1px solid var(--border); }
-  .process__row::before {
-    content: ""; position: absolute; left: -1.25rem; top: 0; bottom: 0; width: 2px;
-    background: var(--accent); transform: scaleY(0); transform-origin: top;
-    transition: transform 0.4s cubic-bezier(.16,1,.3,1);
+    transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
   }
   @media (hover: hover) {
-    .process__row:hover { background-color: rgba(199, 240, 0, 0.035); }
-    .process__row:hover::before { transform: scaleY(1); }
-    .process__row:hover .process__number { transform: scale(1.15); }
+    .process__row:hover .process__number {
+      background: var(--accent); color: var(--accent-fg);
+      transform: scale(1.1);
+      box-shadow: 0 0 0 6px rgba(199, 240, 0, 0.14);
+    }
     .process__row:hover > div { transform: translateX(8px); }
   }
   .process__number {
+    flex: 0 0 auto; width: var(--process-badge); height: var(--process-badge);
+    border-radius: 50%; border: 2px solid var(--accent); background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
     font-family: var(--font-display); color: var(--accent);
-    font-size: clamp(1.5rem, 3vw, 2.25rem); min-width: 3ch;
-    display: inline-block; transform-origin: left center;
-    transition: transform 0.3s cubic-bezier(.16,1,.3,1);
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    position: relative; z-index: 2;
+    transition: background-color 0.4s cubic-bezier(.16,1,.3,1), color 0.4s cubic-bezier(.16,1,.3,1),
+      transform 0.4s cubic-bezier(.16,1,.3,1), box-shadow 0.4s ease;
   }
   .process__row > div { transition: transform 0.4s cubic-bezier(.16,1,.3,1); }
   .process__row h3 { font-size: clamp(1.1rem, 2.4vw, 1.6rem); }
   .process__desc { margin-top: 0.5rem; max-width: 46ch; }
   .process__list .process__row:nth-child(2) { transition-delay: 0.1s; }
   .process__list .process__row:nth-child(3) { transition-delay: 0.2s; }
+  @media (prefers-reduced-motion: reduce) {
+    .process__list::after { transition: none; transform: scaleY(1); }
+  }
 
   /* ---------- Booking ---------- */
   .booking__echo {
