@@ -47,7 +47,6 @@ function initLenis() {
     lerp: 0.1,
     wheelMultiplier: 1,
     smoothWheel: true,
-    autoRaf: false, // single RAF loop below drives Lenis — never let it run its own
   });
 }
 
@@ -162,9 +161,9 @@ function initScrollUI() {
   update();
 }
 
-/** Level meters (hero mini-meters + room-row meters) fill to their real
- *  value once, the first time they enter the viewport. Reduced motion:
- *  jump straight to final value, no transition. */
+/** Level meters (the /12 energy sequence) fill to their real value once,
+ *  the first time they enter the viewport. Reduced motion: jump straight
+ *  to final value, no transition. */
 function initLevelMeters() {
   const fills = document.querySelectorAll('[data-level][data-max]');
   if (!fills.length) return;
@@ -227,15 +226,33 @@ function initContactForm() {
   });
 }
 
-/** Smooth-scroll cue buttons ([data-scroll-to]) route through Lenis when
- *  active so the jump respects the same easing as the rest of the page. */
+/** Every same-page anchor — nav links, CTAs, footer, skip-link, the
+ *  [data-scroll-to] scroll cue — must route through Lenis. Lenis re-asserts
+ *  its own tracked scroll position every rAF tick, so a plain native hash
+ *  jump (or scrollIntoView) gets fought and snapped straight back to 0.
+ *  This is the single place that scrolls the page programmatically. */
+function scrollToTarget(target) {
+  if (!target) return;
+  if (lenis) lenis.scrollTo(target);
+  else target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+}
+
 function initScrollCues() {
   document.querySelectorAll('[data-scroll-to]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const target = document.querySelector(btn.dataset.scrollTo);
+      scrollToTarget(document.querySelector(btn.dataset.scrollTo));
+    });
+  });
+
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    const hash = link.getAttribute('href');
+    if (!hash || hash === '#') return;
+    link.addEventListener('click', (e) => {
+      const target = document.querySelector(hash);
       if (!target) return;
-      if (lenis) lenis.scrollTo(target);
-      else target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      e.preventDefault();
+      scrollToTarget(target);
+      history.pushState(null, '', hash);
     });
   });
 }
